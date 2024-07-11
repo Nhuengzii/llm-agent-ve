@@ -23,21 +23,21 @@ const dashboard = {
     children: [
         {
             id: 'chatflows',
-            title: 'Chatflows',
+            title: 'Workflows',
             type: 'item',
             url: '/chatflows',
             icon: icons.IconHierarchy,
             breadcrumbs: true
         },
-        {
-            id: 'agentflows',
-            title: 'Agentflows',
-            type: 'item',
-            url: '/agentflows',
-            icon: icons.IconUsersGroup,
-            breadcrumbs: true,
-            isBeta: true
-        },
+        // {
+        //     id: 'agentflows',
+        //     title: 'Agentflows',
+        //     type: 'item',
+        //     url: '/agentflows',
+        //     icon: icons.IconUsersGroup,
+        //     breadcrumbs: true,
+        //     isBeta: true
+        // },
         {
             id: 'marketplaces',
             title: 'Marketplaces',
@@ -46,22 +46,22 @@ const dashboard = {
             icon: icons.IconBuildingStore,
             breadcrumbs: true
         },
-        {
-            id: 'tools',
-            title: 'Tools',
-            type: 'item',
-            url: '/tools',
-            icon: icons.IconTool,
-            breadcrumbs: true
-        },
-        {
-            id: 'assistants',
-            title: 'Assistants',
-            type: 'item',
-            url: '/assistants',
-            icon: icons.IconRobot,
-            breadcrumbs: true
-        },
+        // {
+        //     id: 'tools',
+        //     title: 'Tools',
+        //     type: 'item',
+        //     url: '/tools',
+        //     icon: icons.IconTool,
+        //     breadcrumbs: true
+        // },
+        // {
+        //     id: 'assistants',
+        //     title: 'Assistants',
+        //     type: 'item',
+        //     url: '/assistants',
+        //     icon: icons.IconRobot,
+        //     breadcrumbs: true
+        // },
         {
             id: 'credentials',
             title: 'Credentials',
@@ -70,14 +70,14 @@ const dashboard = {
             icon: icons.IconLock,
             breadcrumbs: true
         },
-        {
-            id: 'variables',
-            title: 'Variables',
-            type: 'item',
-            url: '/variables',
-            icon: icons.IconVariable,
-            breadcrumbs: true
-        },
+        // {
+        //     id: 'variables',
+        //     title: 'Variables',
+        //     type: 'item',
+        //     url: '/variables',
+        //     icon: icons.IconVariable,
+        //     breadcrumbs: true
+        // },
         {
             id: 'apikey',
             title: 'API Keys',
@@ -86,14 +86,14 @@ const dashboard = {
             icon: icons.IconKey,
             breadcrumbs: true
         },
-        {
-            id: 'document-stores',
-            title: 'Document Stores',
-            type: 'item',
-            url: '/document-stores',
-            icon: icons.IconFiles,
-            breadcrumbs: true
-        }
+        // {
+        //     id: 'document-stores',
+        //     title: 'Document Stores',
+        //     type: 'item',
+        //     url: '/document-stores',
+        //     icon: icons.IconFiles,
+        //     breadcrumbs: true
+        // }
     ]
 }
 
