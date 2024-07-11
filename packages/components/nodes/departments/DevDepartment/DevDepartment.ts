@@ -1,0 +1,55 @@
+import { getBaseClasses } from '../../../src/utils'
+import { INode, INodeParams } from '../../../src/Interface'
+import { AgentExecutor } from '../../../src/agents'
+
+class DevDepartmentGraph implements INode {
+    label: string
+    name: string
+    version: number
+    description: string
+    type: string
+    icon: string
+    category: string
+    baseClasses: string[]
+    inputs: INodeParams[]
+
+    constructor() {
+        this.label = 'DevDepartment'
+        this.name = 'devDepartment'
+        this.version = 1.0
+        this.type = 'DevDepartment'
+        this.category = 'Department'
+        this.icon = 'devDepartment.png'
+        this.description = `Agent that uses Function Calling to pick the tools and args to call`
+        this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
+        this.inputs = [
+            {
+                label: 'Tool Calling Chat Model',
+                name: 'model',
+                type: 'BaseChatModel',
+                description:
+                    'Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat'
+            },
+            {
+                label: 'Agent Name',
+                name: 'agentName',
+                type: 'string',
+                optional: true
+            },
+            {
+                label: 'Input Key',
+                name: 'inputKey',
+                type: 'string',
+                optional: true
+            },
+            {
+                label: 'Ouput Key',
+                name: 'outputKey',
+                type: 'string',
+                optional: true
+            }
+        ]
+    }
+}
+
+module.exports = { nodeClass: DevDepartmentGraph }
