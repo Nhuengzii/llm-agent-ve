@@ -1,49 +1,49 @@
-import { useState, useRef, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 // material-ui
-import { useTheme } from '@mui/material/styles'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
     Accordion,
-    AccordionSummary,
     AccordionDetails,
+    AccordionSummary,
     Box,
+    Chip,
     ClickAwayListener,
     Divider,
     InputAdornment,
     List,
-    ListItemButton,
     ListItem,
     ListItemAvatar,
+    ListItemButton,
     ListItemText,
     OutlinedInput,
     Paper,
     Popper,
     Stack,
-    Typography,
-    Chip,
     Tab,
-    Tabs
+    Tabs,
+    Typography
 } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { useTheme } from '@mui/material/styles'
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // project imports
+import { StyledFab } from '@/ui-component/button/StyledFab'
 import MainCard from '@/ui-component/cards/MainCard'
 import Transitions from '@/ui-component/extended/Transitions'
-import { StyledFab } from '@/ui-component/button/StyledFab'
 
 // icons
-import { IconPlus, IconSearch, IconMinus, IconX } from '@tabler/icons-react'
-import LlamaindexPNG from '@/assets/images/llamaindex.png'
 import LangChainPNG from '@/assets/images/langchain.png'
+import LlamaindexPNG from '@/assets/images/llamaindex.png'
+import { IconMinus, IconPlus, IconSearch, IconX } from '@tabler/icons-react'
 
 // const
-import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_NODES } from '@/store/actions'
+import { baseURL } from '@/store/constant'
 
 // ==============================|| ADD NODES||============================== //
 function a11yProps(index) {
@@ -151,7 +151,7 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
     const groupByCategory = (nodes, newTabValue, isFilter) => {
         if (isAgentCanvas) {
             const accordianCategories = {}
-            const result = nodes.reduce(function (r, a) {
+            const result = nodes.reduce(function(r, a) {
                 r[a.category] = r[a.category] || []
                 r[a.category].push(a)
                 accordianCategories[a.category] = isFilter ? true : false
@@ -182,7 +182,7 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
         } else {
             const taggedNodes = groupByTags(nodes, newTabValue)
             const accordianCategories = {}
-            const result = taggedNodes.reduce(function (r, a) {
+            const result = taggedNodes.reduce(function(r, a) {
                 r[a.category] = r[a.category] || []
                 r[a.category].push(a)
                 accordianCategories[a.category] = isFilter ? true : false
@@ -324,7 +324,8 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
                                                 'aria-label': 'weight'
                                             }}
                                         />
-                                        {!isAgentCanvas && (
+                                        {/* TODO */}
+                                        {!isAgentCanvas && false && (
                                             <Tabs
                                                 sx={{ position: 'relative', minHeight: '50px', height: '50px' }}
                                                 variant='fullWidth'
@@ -522,9 +523,9 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
                                                                                                             background:
                                                                                                                 node.badge === 'DEPRECATING'
                                                                                                                     ? theme.palette.warning
-                                                                                                                          .main
+                                                                                                                        .main
                                                                                                                     : theme.palette.teal
-                                                                                                                          .main,
+                                                                                                                        .main,
                                                                                                             color:
                                                                                                                 node.badge !== 'DEPRECATING'
                                                                                                                     ? 'white'
