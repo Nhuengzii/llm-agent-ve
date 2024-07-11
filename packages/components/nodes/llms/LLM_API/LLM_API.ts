@@ -1,6 +1,8 @@
 import { OpenAI } from '@langchain/openai'
-import { INode, INodeParams } from '../../../src/Interface'
+import { INode, INodeParams, INodeOptionsValue } from '../../../src/Interface'
 import { getBaseClasses } from '../../../src/utils'
+import { getModels, MODEL_TYPE } from '../../../src/modelLoader'
+
 
 class LLM_API implements INode {
     label: string
@@ -116,6 +118,13 @@ class LLM_API implements INode {
                 additionalParams: true
             }
         ]
+    }
+
+    //@ts-ignore
+    loadMethods = {
+        async listModels(): Promise<INodeOptionsValue[]> {
+            return await getModels(MODEL_TYPE.LLM, 'LLMApi')
+        }
     }
 }
 

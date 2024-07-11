@@ -673,6 +673,113 @@
     ],
     "llm": [
         {
+            "name": "LLMHuggingface",
+            "models": [
+                {
+                    "label": "Qwen2-7B-Instruct",
+                    "name": "Qwen2-7B-Instruct"
+                },
+                {
+                    "label": "DeepSeek-Coder-V2-Instruct",
+                    "name": "DeepSeek-Coder-V2-Instruct"
+                },
+                {
+                    "label": "Phi-3-small",
+                    "name": "Phi-3-small"
+                }
+            ]
+        },
+        {
+            "name": "LLMApi",
+            "models": [
+                {
+                    "label": "OpenAI/gpt-3.5-turbo",
+                    "name": "OpenAI/gpt-3.5-turbo"
+                },
+                {
+                    "label": "OpenAI/gpt-4",
+                    "name": "OpenAI/gpt-4"
+                },
+                {
+                    "label": "OpenAI/gpt-4o",
+                    "name": "OpenAI/gpt-4o"
+                },
+                {
+                    "label": "Anthropic/claude-3-haiku-20240307",
+                    "name": "Anthropic/claude-3-haiku-20240307"
+                },
+                {
+                    "label": "Anthropic/claude-3-5-sonnet-20240620",
+                    "name": "Anthropic/claude-3-5-sonnet-20240620"
+                },
+                {
+                    "label": "Anthropic/claude-3-opus-20240229",
+                    "name": "Anthropic/claude-3-opus-20240229"
+                },
+                {
+                    "label": "Groq/llama3-8b-8192",
+                    "name": "Groq/llama3-8b-8192"
+                },
+                {
+                    "label": "Groq/llama3-70b-8192",
+                    "name": "Groq/llama3-70b-8192"
+                },
+                {
+                    "label": "Groq/mixtral-8x7b-32768",
+                    "name": "Groq/mixtral-8x7b-32768"
+                },
+                {
+                    "label": "Groq/whisper-large-v3",
+                    "name": "Groq/whisper-large-v3"
+                }
+            ]
+        },
+        {
+            "name": "LLMLocal",
+            "models": [
+                {
+                    "label": "deepseek-coder-v2",
+                    "name": "deepseek-coder-v2"
+                },
+                {
+                    "label": "qwen2:72b",
+                    "name": "qwen2:72b"
+                },
+                {
+                    "label": "llama3:70b-instruct",
+                    "name": "llama3:70b-instruct"
+                },
+                {
+                    "label": "llama3:70b",
+                    "name": "llama3:70b"
+                },
+                {
+                    "label": "llama3:70b-instruct",
+                    "name": "llama3:70b-instruct"
+                },
+                {
+                    "label": "qwen2:72b",
+                    "name": "qwen2:72b"
+                },
+                {
+                    "label": "qwen2:1.5b",
+                    "name": "qwen2:1.5b"
+                },
+                {
+                    "label": "qwen2:0.5b",
+                    "name": "qwen2:0.5b"
+                },
+                {
+                    "label": "mistral",
+                    "name": "mistral"
+                },
+                {
+                    "label": "mixtral:8x7b",
+                    "name": "mixtral:8x7b"
+                }
+            ]
+        },
+        {
             "name": "awsBedrock",
             "models": [
                 {

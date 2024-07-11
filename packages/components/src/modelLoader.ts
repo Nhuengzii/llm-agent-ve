@@ -32,7 +32,7 @@ const isValidUrl = (urlString: string) => {
 }
 
 const getModelConfig = async (category: MODEL_TYPE, name: string) => {
-    const modelFile = process.env.MODEL_LIST_CONFIG_JSON || MASTER_MODEL_LIST
+    const modelFile = path.join(__dirname, '../..', 'models.json')
 
     if (!modelFile) {
         throw new Error('MODEL_LIST_CONFIG_JSON not set')
