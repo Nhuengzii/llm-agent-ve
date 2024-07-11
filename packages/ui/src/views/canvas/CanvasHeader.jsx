@@ -14,6 +14,7 @@ import { IconSettings, IconChevronLeft, IconDeviceFloppy, IconPencil, IconCheck,
 import Settings from '@/views/settings'
 import SaveChatflowDialog from '@/ui-component/dialog/SaveChatflowDialog'
 import APICodeDialog from '@/views/chatflows/APICodeDialog'
+import CodeViewDialog from '@/views/chatflows/CodeViewDialog'
 import ViewMessagesDialog from '@/ui-component/dialog/ViewMessagesDialog'
 import ChatflowConfigurationDialog from '@/ui-component/dialog/ChatflowConfigurationDialog'
 import UpsertHistoryDialog from '@/views/vectorstore/UpsertHistoryDialog'
@@ -43,7 +44,7 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlo
     const [flowName, setFlowName] = useState('')
     const [isSettingsOpen, setSettingsOpen] = useState(false)
     const [flowDialogOpen, setFlowDialogOpen] = useState(false)
-    const [apiDialogOpen, setAPIDialogOpen] = useState(false)
+    const [codeViewDialogOpen, setCodeViewDialogOpen] = useState(false)
     const [apiDialogProps, setAPIDialogProps] = useState({})
     const [viewMessagesDialogOpen, setViewMessagesDialogOpen] = useState(false)
     const [viewMessagesDialogProps, setViewMessagesDialogProps] = useState({})
@@ -162,14 +163,14 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlo
         }
 
         setAPIDialogProps({
-            title: 'Embed in website or use as API',
+            title: 'This feature is not available yet. Code here is just a placeholder.',
             chatflowid: chatflow.id,
             chatflowApiKeyId: chatflow.apikeyid,
             isFormDataRequired,
             isSessionMemory,
             isAgentCanvas
         })
-        setAPIDialogOpen(true)
+        setCodeViewDialogOpen(true)
     }
 
     const onSaveChatflowClick = () => {
@@ -412,7 +413,7 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlo
                 onCancel={() => setFlowDialogOpen(false)}
                 onConfirm={onConfirmSaveName}
             />
-            <APICodeDialog show={apiDialogOpen} dialogProps={apiDialogProps} onCancel={() => setAPIDialogOpen(false)} />
+            <CodeViewDialog show={codeViewDialogOpen} dialogProps={apiDialogProps} onCancel={() => setCodeViewDialogOpen(false)} />
             <ViewMessagesDialog
                 show={viewMessagesDialogOpen}
                 dialogProps={viewMessagesDialogProps}
