@@ -1,11 +1,11 @@
 {
-    "name": "flowise",
+    "name": "llm-agents-ve",
     "version": "1.8.3",
     "private": true,
     "homepage": "https://flowiseai.com",
     "workspaces": [
         "packages/*",
-        "flowise",
+        "llm-agents-ve",
         "ui",
         "components"
     ],
