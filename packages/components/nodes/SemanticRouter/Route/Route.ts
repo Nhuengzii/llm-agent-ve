@@ -4,6 +4,16 @@ import { ICommonObject, INode, INodeData, INodeOptionsValue, INodeParams } from 
 import { getBaseClasses, getCredentialData, getCredentialParam } from '../../../src/utils'
 import { MODEL_TYPE, getModels, getRegions } from '../../../src/modelLoader'
 
+let placeholderString = `
+    Enter your weather queries in a list format like this:
+    [
+        "What's the weather today?",
+        "Weather forecast for [City/Location]",
+        "Current temperature in [City/Location]",
+        ... (add more questions here)
+    ]
+`
+
 class Route implements INode {
     label: string
     name: string
@@ -26,9 +36,9 @@ class Route implements INode {
         this.baseClasses = [this.type, ...getBaseClasses(BedrockEmbeddings)]
         this.inputs = [
             {
-                label: 'Route Layer',
-                name: 'routeLayer',
-                type: 'RouteLayer'
+                label: 'Before Node',
+                name: 'beforeNode',
+                type: 'BeforeNode'
             },
             {
                 label: 'Route Name',
@@ -40,8 +50,8 @@ class Route implements INode {
                 label: 'Utterances',
                 name: 'utterances',
                 type: 'string',
-                rows: 4,
-                placeholder: '...'
+                rows: 5,
+                placeholder: placeholderString
             }
         ]
     }

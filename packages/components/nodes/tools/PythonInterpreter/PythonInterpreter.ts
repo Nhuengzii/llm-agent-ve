@@ -41,6 +41,11 @@ class PythonInterpreter_Tools implements INode {
         this.baseClasses = [this.type, 'Tool', ...getBaseClasses(PythonInterpreterTool)]
         this.inputs = [
             {
+                label: 'Before Node',
+                name: 'beforeNode',
+                type: 'BeforeNode'
+            },
+            {
                 label: 'Tool Name',
                 name: 'toolName',
                 type: 'string',
