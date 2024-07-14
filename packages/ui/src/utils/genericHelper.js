@@ -252,6 +252,7 @@ export const updateOutdatedNodeEdge = (newComponentNodeData, edges) => {
 }
 
 export const isValidConnection = (connection, reactFlowInstance) => {
+    return true
     const sourceHandle = connection.sourceHandle
     const targetHandle = connection.targetHandle
     const target = connection.target
