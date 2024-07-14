@@ -113,6 +113,19 @@ const Canvas = () => {
             id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
         }
 
+        // Check for existing connection between the same source handle and target handle
+        const existingEdge = edges.find(
+            (edge) => edge.source === params.source && 
+                    edge.target === params.target && 
+                    edge.sourceHandle === params.sourceHandle && 
+                    edge.targetHandle === params.targetHandle
+        );
+
+        // If an existing edge is found, do not create a new connection
+        if (existingEdge) {
+            return;
+        }
+
         const targetNodeId = params.targetHandle.split('-')[0]
         const sourceNodeId = params.sourceHandle.split('-')[0]
         const targetInput = params.targetHandle.split('-')[2]
