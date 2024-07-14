@@ -26,24 +26,29 @@ class RouteLayer implements INode {
         this.baseClasses = [this.type, ...getBaseClasses(BedrockEmbeddings)]
         this.inputs = [
             {
+                label: 'Before Node',
+                name: 'beforeNode',
+                type: 'BeforeNode'
+            },
+            {
                 label: 'Encoder',
                 name: 'encoder',
                 type: 'options',
                 options: [
                     {
-                        label: 'cpp',
-                        name: 'cpp'
+                        label: 'OpenAI',
+                        name: 'OpenAI'
                     },
                     {
-                        label: 'go',
-                        name: 'go'
+                        label: 'HuggingFace',
+                        name: 'HuggingFace'
                     },
                     {
-                        label: 'java',
-                        name: 'java'
+                        label: 'Google',
+                        name: 'Google'
                     }
                 ],
-                default: 'cpp'
+                default: 'OpenAI'
             }
         ]
     }
