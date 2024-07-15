@@ -31,6 +31,19 @@ class FinanceDepartmentGraph implements INode {
                     'Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat'
             },
             {
+                label: 'LLM Model',
+                name: 'llmModel',
+                type: 'LLM Model',
+                description: 'LLM Model for the agent',
+                optional: true
+            },
+            {
+                label: 'Embedding Model',
+                name: 'embeddingModel',
+                type: 'Embedding Model',
+                optional: true
+            },
+            {
                 label: 'Agent Name',
                 name: 'agentName',
                 type: 'string',
@@ -40,13 +53,15 @@ class FinanceDepartmentGraph implements INode {
                 label: 'Input Key',
                 name: 'inputKey',
                 type: 'string',
-                optional: true
+                optional: true,
+                additionalParams: true
             },
             {
                 label: 'Ouput Key',
                 name: 'outputKey',
                 type: 'string',
-                optional: true
+                optional: true,
+                additionalParams: true
             }
         ]
     }
