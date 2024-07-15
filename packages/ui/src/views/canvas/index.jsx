@@ -110,6 +110,8 @@ const Canvas = () => {
         const newEdge = {
             ...params,
             type: 'buttonedge',
+            arrowHeadType: 'arrow', // Cannot be 'arrow' and 'animated' at the same time
+            animated: true,
             id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
         }
 
