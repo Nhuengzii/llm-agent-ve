@@ -23,6 +23,7 @@ import ButtonEdge from './ButtonEdge'
 import StickyNote from './StickyNote'
 import CanvasHeader from './CanvasHeader'
 import AddNodes from './AddNodes'
+import RunWorkflow from './RunWorkflow'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { ChatPopUp } from '@/views/chatmessage/ChatPopUp'
 import { VectorStorePopUp } from '@/views/vectorstore/VectorStorePopUp'
@@ -110,17 +111,15 @@ const Canvas = () => {
         const newEdge = {
             ...params,
             type: 'buttonedge',
-            arrowHeadType: 'arrow', // Cannot be 'arrow' and 'animated' at the same time
-            animated: true,
             id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
         }
 
         // Check for existing connection between the same source handle and target handle
         const existingEdge = edges.find(
-            (edge) => edge.source === params.source && 
-                    edge.target === params.target && 
-                    edge.sourceHandle === params.sourceHandle && 
-                    edge.targetHandle === params.targetHandle
+            (edge) => edge.source === params.source &&
+                edge.target === params.target &&
+                edge.sourceHandle === params.sourceHandle &&
+                edge.targetHandle === params.targetHandle
         );
 
         // If an existing edge is found, do not create a new connection
@@ -601,6 +600,7 @@ const Canvas = () => {
                                     </Fab>
                                 )}
                                 {isUpsertButtonEnabled && <VectorStorePopUp chatflowid={chatflowId} />}
+                                <RunWorkflow isAgentCanvas={isAgentCanvas} nodesData={getNodesApi.data} node={selectedNode} />
                                 <ChatPopUp isAgentCanvas={isAgentCanvas} chatflowid={chatflowId} />
                             </ReactFlow>
                         </div>

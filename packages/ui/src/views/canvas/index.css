@@ -35,3 +35,9 @@
     flex-grow: 1;
     height: 100%;
 }
+
+.animated-edge {
+    stroke-dasharray: 5;
+    stroke-dashoffset: 1000;
+    animation: dash 5s linear infinite;
+}

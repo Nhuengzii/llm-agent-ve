@@ -31,13 +31,13 @@ class Route implements INode {
         this.version = 5.0
         this.type = 'Route'
         this.icon = 'route.svg'
-        this.category = 'Semantic Router'
-        this.description = 'Semantic Router is a superfast decision-making  for your LLMs and agents'
+        this.category = 'Control'
+        this.description = ''
         this.baseClasses = [this.type, ...getBaseClasses(BedrockEmbeddings)]
         this.inputs = [
             {
-                label: 'Before Node',
-                name: 'beforeNode',
+                label: 'Input',
+                name: 'input',
                 type: 'BeforeNode'
             },
             {

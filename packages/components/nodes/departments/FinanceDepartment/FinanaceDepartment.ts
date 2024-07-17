@@ -24,11 +24,9 @@ class FinanceDepartmentGraph implements INode {
         this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
         this.inputs = [
             {
-                label: 'Tool Calling Chat Model',
-                name: 'model',
-                type: 'BaseChatModel',
-                description:
-                    'Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat'
+                label: 'Input',
+                name: 'input',
+                type: 'BeforeNode',
             },
             {
                 label: 'LLM Model',

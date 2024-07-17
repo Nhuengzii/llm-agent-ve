@@ -68,7 +68,7 @@ const CanvasNode = ({ data }) => {
             } else if (componentNode.badge === 'DEPRECATING') {
                 setWarningMessage(
                     componentNode?.deprecateMessage ??
-                        'This node will be deprecated in the next release. Change to a new node tagged with NEW'
+                    'This node will be deprecated in the next release. Change to a new node tagged with NEW'
                 )
             } else {
                 setWarningMessage('')
@@ -82,7 +82,19 @@ const CanvasNode = ({ data }) => {
                 content={false}
                 sx={{
                     padding: 0,
-                    borderColor: data.selected ? theme.palette.primary.main : theme.palette.text.secondary
+                    borderColor: data.selected ? theme.palette.primary.main : theme.palette.text.secondary,
+                    "@keyframes blinker": {
+                        "0%": {
+                            'borderColor': 'transparent',
+                        },
+                        "50%": {
+                            'borderColor': 'red'
+                        },
+                        "100%": {
+                            'borderColor': 'transparent',
+                        }
+                    },
+                    animation: data.current ? 'blinker 1s linear infinite' : 'none'
                 }}
                 border={false}
             >
@@ -221,7 +233,7 @@ const CanvasNode = ({ data }) => {
                                     textAlign: 'center',
                                     marginTop:
                                         data.inputParams.filter((param) => param.additionalParams).length ===
-                                        data.inputParams.length + data.inputAnchors.length
+                                            data.inputParams.length + data.inputAnchors.length
                                             ? 20
                                             : 0
                                 }}
@@ -242,6 +254,11 @@ const CanvasNode = ({ data }) => {
                                 Output
                             </Typography>
                         </Box>
+                        {(data.log != null || data.log != '') &&
+                            <Box sx={{ background: theme.palette.asyncSelect.main, p: 1 }}>
+                                <p>{data.log}</p>
+                            </Box>
+                        }
                         <Divider />
                         {data.outputAnchors.map((outputAnchor) => (
                             <NodeOutputHandler key={JSON.stringify(data)} outputAnchor={outputAnchor} data={data} />

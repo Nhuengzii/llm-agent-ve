@@ -24,6 +24,11 @@ class PromptTemplate_Prompts implements INode {
         this.baseClasses = [...getBaseClasses(PromptTemplate)]
         this.inputs = [
             {
+                label: 'Input',
+                name: 'input',
+                type: 'BeforeNode'
+            },
+            {
                 label: 'Template',
                 name: 'template',
                 type: 'string',
