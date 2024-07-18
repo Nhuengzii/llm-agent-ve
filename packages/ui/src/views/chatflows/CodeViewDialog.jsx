@@ -51,6 +51,7 @@ import { TableViewOnly } from '@/ui-component/table/Table'
 
 // Helpers
 import { unshiftFiles, getConfigExamplesForJS, getConfigExamplesForPython, getConfigExamplesForCurl } from '@/utils/genericHelper'
+import { useReactFlow } from 'reactflow'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -80,13 +81,14 @@ function a11yProps(index) {
     }
 }
 
-const CodeViewDialog = ({ show, dialogProps, onCancel }) => {
+const CodeViewDialog = ({ show, dialogProps, onCancel, json_workflow }) => {
     const portalElement = document.getElementById('portal')
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     // const codes = ['Embed', 'Python', 'JavaScript', 'cURL', 'Share Chatbot']
     const codes = ['json', "Python"]
+    const [langgraphCode, setLanggraphCode] = useState("")
     const [value, setValue] = useState(0)
     const [keyOptions, setKeyOptions] = useState([])
     const [apiKeys, setAPIKeys] = useState([])
@@ -169,62 +171,27 @@ const CodeViewDialog = ({ show, dialogProps, onCancel }) => {
         }
     }, [getConfigApi.data])
 
+    const getLanggraphCode = () => {
+        const baseUrl = 'http://localhost:8000'
+        fetch(`${baseUrl}/codegen/langgraph`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ json_data: json_workflow }),
+        })
+            .then((response) => response.json())
+            .then((data) => setLanggraphCode(data.code))
+    }
+
     const handleChange = (event, newValue) => {
         setValue(newValue)
+        getLanggraphCode()
     }
 
     const getCode = (codeLang) => {
         if (codeLang === 'Python') {
-            return `from typing import Annotated, Literal, TypedDict
-from langchain_core.messages import HumanMessage
-from langchain_anthropic import ChatAnthropic
-from langchain_core.tools import tool
-from langgraph.checkpoint import MemorySaver
-from langgraph.graph import END, StateGraph, MessagesState
-from langgraph.prebuilt import ToolNode
-
-@tool
-def search(query: str):
-    """Call to surf the web."""
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        return ["It's 60 degrees and foggy."]
-    return ["It's 90 degrees and sunny."]
-
-
-tools = [search]
-
-tool_node = ToolNode(tools)
-
-model = ChatAnthropic(model="claude-3-5-sonnet-20240620", temperature=0).bind_tools(tools)
-
-def should_continue(state: MessagesState) -> Literal["tools", END]:
-    messages = state['messages']
-    last_message = messages[-1]
-    if last_message.tool_calls:
-        return "tools"
-    return END
-
-def call_model(state: MessagesState):
-    messages = state['messages']
-    response = model.invoke(messages)
-    return {"messages": [response]}
-
-workflow = StateGraph(MessagesState)
-
-workflow.add_node("agent", call_model)
-workflow.add_node("tools", tool_node)
-
-workflow.set_entry_point("agent")
-
-workflow.add_conditional_edges(
-    "agent",
-    should_continue,
-)
-
-workflow.add_edge("tools", 'agent')
-checkpointer = MemorySaver()
-app = workflow.compile(checkpointer=checkpointer)
-`
+            return langgraphCode
         } else if (codeLang === 'JavaScript') {
             return `async function query(data) {
     const response = await fetch(
@@ -251,506 +218,14 @@ query({"question": "Hey, how are you?"}).then((response) => {
      -d '{"question": "Hey, how are you?"}' \\
      -H "Content-Type: application/json"`
         } else if (codeLang === "json") {
-            return `
-{
-  "nodes": [
-    {
-      "width": 300,
-      "height": 253,
-      "id": "bufferMemory_0",
-      "position": {
-        "x": 195.885587148196,
-        "y": -256.3028598579891
-      },
-      "type": "customNode",
-      "data": {
-        "id": "bufferMemory_0",
-        "label": "Buffer Memory",
-        "version": 2,
-        "name": "bufferMemory",
-        "type": "BufferMemory",
-        "baseClasses": [
-          "BufferMemory",
-          "BaseChatMemory",
-          "BaseMemory"
-        ],
-        "category": "Memory",
-        "description": "Retrieve chat messages stored in database",
-        "inputParams": [
-          {
-            "label": "Session Id",
-            "name": "sessionId",
-            "type": "string",
-            "description": "If not specified, a random id will be used. Learn <a target=\"_blank\" href=\"https://docs.flowiseai.com/memory#ui-and-embedded-chat\">more</a>",
-            "default": "",
-            "additionalParams": true,
-            "optional": true,
-            "id": "bufferMemory_0-input-sessionId-string"
-          },
-          {
-            "label": "Memory Key",
-            "name": "memoryKey",
-            "type": "string",
-            "default": "chat_history",
-            "additionalParams": true,
-            "id": "bufferMemory_0-input-memoryKey-string"
-          }
-        ],
-        "inputAnchors": [],
-        "inputs": {
-          "sessionId": "",
-          "memoryKey": "chat_history"
-        },
-        "outputAnchors": [
-          {
-            "id": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
-            "name": "bufferMemory",
-            "label": "BufferMemory",
-            "type": "BufferMemory | BaseChatMemory | BaseMemory"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "selected": false,
-      "positionAbsolute": {
-        "x": 195.885587148196,
-        "y": -256.3028598579891
-      },
-      "dragging": false
-    },
-    {
-      "width": 300,
-      "height": 435,
-      "id": "conversationChain_0",
-      "position": {
-        "x": 958.9887390513221,
-        "y": 318.8734467468765
-      },
-      "type": "customNode",
-      "data": {
-        "id": "conversationChain_0",
-        "label": "Conversation Chain",
-        "version": 3,
-        "name": "conversationChain",
-        "type": "ConversationChain",
-        "baseClasses": [
-          "ConversationChain",
-          "LLMChain",
-          "BaseChain",
-          "Runnable"
-        ],
-        "category": "Chains",
-        "description": "Chat models specific conversational chain with memory",
-        "inputParams": [
-          {
-            "label": "System Message",
-            "name": "systemMessagePrompt",
-            "type": "string",
-            "rows": 4,
-            "description": "If Chat Prompt Template is provided, this will be ignored",
-            "additionalParams": true,
-            "optional": true,
-            "default": "The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.",
-            "placeholder": "The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.",
-            "id": "conversationChain_0-input-systemMessagePrompt-string"
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Chat Model",
-            "name": "model",
-            "type": "BaseChatModel",
-            "id": "conversationChain_0-input-model-BaseChatModel"
-          },
-          {
-            "label": "Memory",
-            "name": "memory",
-            "type": "BaseMemory",
-            "id": "conversationChain_0-input-memory-BaseMemory"
-          },
-          {
-            "label": "Chat Prompt Template",
-            "name": "chatPromptTemplate",
-            "type": "ChatPromptTemplate",
-            "description": "Override existing prompt with Chat Prompt Template. Human Message must includes {input} variable",
-            "optional": true,
-            "id": "conversationChain_0-input-chatPromptTemplate-ChatPromptTemplate"
-          },
-          {
-            "label": "Input Moderation",
-            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model",
-            "name": "inputModeration",
-            "type": "Moderation",
-            "optional": true,
-            "list": true,
-            "id": "conversationChain_0-input-inputModeration-Moderation"
-          }
-        ],
-        "inputs": {
-          "inputModeration": "",
-          "model": "{{chatAnthropic_0.data.instance}}",
-          "memory": "{{bufferMemory_0.data.instance}}",
-          "chatPromptTemplate": "{{chatPromptTemplate_0.data.instance}}",
-          "systemMessagePrompt": "The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know."
-        },
-        "outputAnchors": [
-          {
-            "id": "conversationChain_0-output-conversationChain-ConversationChain|LLMChain|BaseChain|Runnable",
-            "name": "conversationChain",
-            "label": "ConversationChain",
-            "type": "ConversationChain | LLMChain | BaseChain | Runnable"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "selected": false,
-      "positionAbsolute": {
-        "x": 958.9887390513221,
-        "y": 318.8734467468765
-      },
-      "dragging": false
-    },
-    {
-      "width": 300,
-      "height": 670,
-      "id": "chatAnthropic_0",
-      "position": {
-        "x": 757.9773055749514,
-        "y": -394.7592261450517
-      },
-      "type": "customNode",
-      "data": {
-        "id": "chatAnthropic_0",
-        "label": "ChatAnthropic",
-        "version": 6,
-        "name": "chatAnthropic",
-        "type": "ChatAnthropic",
-        "baseClasses": [
-          "ChatAnthropic",
-          "BaseChatModel",
-          "BaseLanguageModel",
-          "Runnable"
-        ],
-        "category": "Chat Models",
-        "description": "Wrapper around ChatAnthropic large language models that use the Chat endpoint",
-        "inputParams": [
-          {
-            "label": "Connect Credential",
-            "name": "credential",
-            "type": "credential",
-            "credentialNames": [
-              "anthropicApi"
-            ],
-            "id": "chatAnthropic_0-input-credential-credential"
-          },
-          {
-            "label": "Model Name",
-            "name": "modelName",
-            "type": "asyncOptions",
-            "loadMethod": "listModels",
-            "default": "claude-3-haiku",
-            "id": "chatAnthropic_0-input-modelName-options"
-          },
-          {
-            "label": "Temperature",
-            "name": "temperature",
-            "type": "number",
-            "step": 0.1,
-            "default": 0.9,
-            "optional": true,
-            "id": "chatAnthropic_0-input-temperature-number"
-          },
-          {
-            "label": "Max Tokens",
-            "name": "maxTokensToSample",
-            "type": "number",
-            "step": 1,
-            "optional": true,
-            "additionalParams": true,
-            "id": "chatAnthropic_0-input-maxTokensToSample-number"
-          },
-          {
-            "label": "Top P",
-            "name": "topP",
-            "type": "number",
-            "step": 0.1,
-            "optional": true,
-            "additionalParams": true,
-            "id": "chatAnthropic_0-input-topP-number"
-          },
-          {
-            "label": "Top K",
-            "name": "topK",
-            "type": "number",
-            "step": 0.1,
-            "optional": true,
-            "additionalParams": true,
-            "id": "chatAnthropic_0-input-topK-number"
-          },
-          {
-            "label": "Allow Image Uploads",
-            "name": "allowImageUploads",
-            "type": "boolean",
-            "description": "Automatically uses claude-3-* models when image is being uploaded from chat. Only works with LLMChain, Conversation Chain, ReAct Agent, and Conversational Agent",
-            "default": false,
-            "optional": true,
-            "id": "chatAnthropic_0-input-allowImageUploads-boolean"
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Cache",
-            "name": "cache",
-            "type": "BaseCache",
-            "optional": true,
-            "id": "chatAnthropic_0-input-cache-BaseCache"
-          }
-        ],
-        "inputs": {
-          "cache": "",
-          "modelName": "claude-3-haiku",
-          "temperature": 0.9,
-          "maxTokensToSample": "",
-          "topP": "",
-          "topK": "",
-          "allowImageUploads": true
-        },
-        "outputAnchors": [
-          {
-            "id": "chatAnthropic_0-output-chatAnthropic-ChatAnthropic|BaseChatModel|BaseLanguageModel|Runnable",
-            "name": "chatAnthropic",
-            "label": "ChatAnthropic",
-            "type": "ChatAnthropic | BaseChatModel | BaseLanguageModel | Runnable"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "selected": false,
-      "positionAbsolute": {
-        "x": 757.9773055749514,
-        "y": -394.7592261450517
-      },
-      "dragging": false
-    },
-    {
-      "width": 300,
-      "height": 690,
-      "id": "chatPromptTemplate_0",
-      "position": {
-        "x": -106.44189698270114,
-        "y": 20.133956087516538
-      },
-      "type": "customNode",
-      "data": {
-        "id": "chatPromptTemplate_0",
-        "label": "Chat Prompt Template",
-        "version": 1,
-        "name": "chatPromptTemplate",
-        "type": "ChatPromptTemplate",
-        "baseClasses": [
-          "ChatPromptTemplate",
-          "BaseChatPromptTemplate",
-          "BasePromptTemplate",
-          "Runnable"
-        ],
-        "category": "Prompts",
-        "description": "Schema to represent a chat prompt",
-        "inputParams": [
-          {
-            "label": "System Message",
-            "name": "systemMessagePrompt",
-            "type": "string",
-            "rows": 4,
-            "placeholder": "You are a helpful assistant that translates {input_language} to {output_language}.",
-            "id": "chatPromptTemplate_0-input-systemMessagePrompt-string"
-          },
-          {
-            "label": "Human Message",
-            "name": "humanMessagePrompt",
-            "type": "string",
-            "rows": 4,
-            "placeholder": "{text}",
-            "id": "chatPromptTemplate_0-input-humanMessagePrompt-string"
-          },
-          {
-            "label": "Format Prompt Values",
-            "name": "promptValues",
-            "type": "json",
-            "optional": true,
-            "acceptVariable": true,
-            "list": true,
-            "id": "chatPromptTemplate_0-input-promptValues-json"
-          }
-        ],
-        "inputAnchors": [],
-        "inputs": {
-          "systemMessagePrompt": "The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.\nThe AI has the following context:\n{context}",
-          "humanMessagePrompt": "{input}",
-          "promptValues": "{\"context\":\"{{plainText_0.data.instance}}\",\"input\":\"{{question}}\"}"
-        },
-        "outputAnchors": [
-          {
-            "id": "chatPromptTemplate_0-output-chatPromptTemplate-ChatPromptTemplate|BaseChatPromptTemplate|BasePromptTemplate|Runnable",
-            "name": "chatPromptTemplate",
-            "label": "ChatPromptTemplate",
-            "type": "ChatPromptTemplate | BaseChatPromptTemplate | BasePromptTemplate | Runnable"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "selected": false,
-      "positionAbsolute": {
-        "x": -106.44189698270114,
-        "y": 20.133956087516538
-      },
-      "dragging": false
-    },
-    {
-      "width": 300,
-      "height": 487,
-      "id": "plainText_0",
-      "position": {
-        "x": -487.7511991135089,
-        "y": 77.83838996645807
-      },
-      "type": "customNode",
-      "data": {
-        "id": "plainText_0",
-        "label": "Plain Text",
-        "version": 2,
-        "name": "plainText",
-        "type": "Document",
-        "baseClasses": [
-          "Document"
-        ],
-        "category": "Document Loaders",
-        "description": "Load data from plain text",
-        "inputParams": [
-          {
-            "label": "Text",
-            "name": "text",
-            "type": "string",
-            "rows": 4,
-            "placeholder": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-            "id": "plainText_0-input-text-string"
-          },
-          {
-            "label": "Metadata",
-            "name": "metadata",
-            "type": "json",
-            "optional": true,
-            "additionalParams": true,
-            "id": "plainText_0-input-metadata-json"
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Text Splitter",
-            "name": "textSplitter",
-            "type": "TextSplitter",
-            "optional": true,
-            "id": "plainText_0-input-textSplitter-TextSplitter"
-          }
-        ],
-        "inputs": {
-          "text": "Welcome to Skyworld Hotel, where your dreams take flight and your stay soars to new heights. Nestled amidst breathtaking cityscape views, our upscale establishment offers an unparalleled blend of luxury and comfort. Our rooms are elegantly appointed, featuring modern amenities and plush furnishings to ensure your relaxation.\n\nIndulge in culinary delights at our rooftop restaurant, offering a gastronomic journey with panoramic vistas. Skyworld Hotel boasts state-of-the-art conference facilities, perfect for business travelers, and an inviting spa for relaxation seekers. Our attentive staff is dedicated to ensuring your every need is met, making your stay memorable.\n\nCentrally located, we offer easy access to local attractions, making us an ideal choice for both leisure and business travelers. Experience the world of hospitality like never before at Skyworld Hotel.",
-          "textSplitter": "",
-          "metadata": ""
-        },
-        "outputAnchors": [
-          {
-            "name": "output",
-            "label": "Output",
-            "type": "options",
-            "options": [
-              {
-                "id": "plainText_0-output-document-Document|json",
-                "name": "document",
-                "label": "Document",
-                "type": "Document | json"
-              },
-              {
-                "id": "plainText_0-output-text-string|json",
-                "name": "text",
-                "label": "Text",
-                "type": "string | json"
-              }
-            ],
-            "default": "document"
-          }
-        ],
-        "outputs": {
-          "output": "text"
-        },
-        "selected": false
-      },
-      "selected": false,
-      "positionAbsolute": {
-        "x": -487.7511991135089,
-        "y": 77.83838996645807
-      },
-      "dragging": false
-    }
-  ],
-  "edges": [
-    {
-      "source": "bufferMemory_0",
-      "sourceHandle": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
-      "target": "conversationChain_0",
-      "targetHandle": "conversationChain_0-input-memory-BaseMemory",
-      "type": "buttonedge",
-      "id": "bufferMemory_0-bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory-conversationChain_0-conversationChain_0-input-memory-BaseMemory"
-    },
-    {
-      "source": "chatAnthropic_0",
-      "sourceHandle": "chatAnthropic_0-output-chatAnthropic-ChatAnthropic|BaseChatModel|BaseLanguageModel|Runnable",
-      "target": "conversationChain_0",
-      "targetHandle": "conversationChain_0-input-model-BaseChatModel",
-      "type": "buttonedge",
-      "id": "chatAnthropic_0-chatAnthropic_0-output-chatAnthropic-ChatAnthropic|BaseChatModel|BaseLanguageModel|Runnable-conversationChain_0-conversationChain_0-input-model-BaseChatModel"
-    },
-    {
-      "source": "plainText_0",
-      "sourceHandle": "plainText_0-output-text-string|json",
-      "target": "chatPromptTemplate_0",
-      "targetHandle": "chatPromptTemplate_0-input-promptValues-json",
-      "type": "buttonedge",
-      "id": "plainText_0-plainText_0-output-text-string|json-chatPromptTemplate_0-chatPromptTemplate_0-input-promptValues-json"
-    },
-    {
-      "source": "chatPromptTemplate_0",
-      "sourceHandle": "chatPromptTemplate_0-output-chatPromptTemplate-ChatPromptTemplate|BaseChatPromptTemplate|BasePromptTemplate|Runnable",
-      "target": "conversationChain_0",
-      "targetHandle": "conversationChain_0-input-chatPromptTemplate-ChatPromptTemplate",
-      "type": "buttonedge",
-      "id": "chatPromptTemplate_0-chatPromptTemplate_0-output-chatPromptTemplate-ChatPromptTemplate|BaseChatPromptTemplate|BasePromptTemplate|Runnable-conversationChain_0-conversationChain_0-input-chatPromptTemplate-ChatPromptTemplate"
-    }
-  ]
-}
-            `
+            return json_workflow
         }
         return ''
     }
 
     const getCodeWithAuthorization = (codeLang) => {
         if (codeLang === 'Python') {
-            return `import requests
-
-API_URL = "${baseURL}/api/v1/prediction/${dialogProps.chatflowid}"
-headers = {"Authorization": "Bearer ${selectedApiKey?.apiKey}"}
-
-def query(payload):
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.json()
-    
-output = query({
-    "question": "Hey, how are you?",
-})
-`
+            return langgraphCode
         } else if (codeLang === 'JavaScript') {
             return `async function query(data) {
     const response = await fetch(

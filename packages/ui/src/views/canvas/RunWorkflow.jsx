@@ -33,30 +33,14 @@ const output = [
     {
         id: 'promptTemplate_0',
         output: 'Hey what are you looking for?',
-        hightlightEdges: [
-            "promptTemplate_0-promptTemplate_0-output-promptTemplate-PromptTemplate|BaseStringPromptTemplate|BasePromptTemplate|Runnable-RouteLayer_0-RouteLayer_0-input-beforeNode-BeforeNode",
-        ],
-        hightlightNodes: [
-            'promptTemplate_0'
-        ]
     },
     {
         id: 'RouteLayer_0',
         output: 'tester',
-        hightlightEdges: [
-            "RouteLayer_0-RouteLayer_0-output-RouteLayer-RouteLayer|Embeddings-Route_2-Route_2-input-input-BeforeNode",
-            "Route_2-Route_2-output-Route-Route|Embeddings-devDepartment_4-devDepartment_4-input-input-BeforeNode"
-        ],
-        hightlightNodes: [
-            'RouteLayer_0',
-            'Route_2'
-        ]
     },
     {
         id: 'devDepartment_4',
         output: 'I am a developer',
-        hightlightEdges: [],
-        hightlightNodes: ['devDepartment_4']
     }
 ]
 
@@ -237,7 +221,7 @@ const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
         const id = setInterval(() => {
             reactFlow.setNodes((nodes) => {
                 return nodes.map((node) => {
-                    if (output[outputStep.current].hightlightNodes.includes(node.id)) {
+                    if (output[outputStep.current].id === node.id) {
                         return { ...node, data: { ...node.data, current: true, log: output[outputStep.current].output } }
                     }
                     else if (node.data.current) {
@@ -247,17 +231,12 @@ const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
                     }
                 })
             })
-            reactFlow.setEdges((edges) => {
-                return edges.map((edge) => {
-                    if (output[outputStep.current].hightlightEdges.includes(edge.id)) {
-                        return { ...edge, animated: true }
-                    } else if (edge.animated) {
-                        return { ...edge, animated: false }
-                    } else {
-                        return edge
-                    }
-                })
-            })
+            // reactFlow.setEdges((edges) => {
+            //     const targetNode = output[outputStep.current].id
+            //     return edges.map((edge) => {
+            //         if (edge.)
+            //     })
+            // })
             outputStep.current = (outputStep.current + 1) % output.length
         }, 2 * 1000)
     }

@@ -28,18 +28,11 @@ class ChatOpenAI_ChatModels implements INode {
         this.category = 'Chat Models'
         this.description = 'Wrapper around OpenAI large language models that use the Chat endpoint'
         this.baseClasses = [this.type, ...getBaseClasses(LangchainChatOpenAI)]
-        this.credential = {
-            label: 'Connect Credential',
-            name: 'credential',
-            type: 'credential',
-            credentialNames: ['openAIApi']
-        }
         this.inputs = [
             {
-                label: 'Cache',
-                name: 'cache',
-                type: 'BaseCache',
-                optional: true
+                label: "Input",
+                name: "input",
+                type: "BeforeNode",
             },
             {
                 label: 'Model Name',
