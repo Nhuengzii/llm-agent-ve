@@ -33,78 +33,34 @@ class ReActAgentLLM_Agents implements INode {
         this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
         this.inputs = [
             {
+                label: 'Input',
+                name: 'input',
+                type: 'Node'
+            },
+            {
                 label: 'Allowed Tools',
                 name: 'tools',
                 type: 'Tool',
                 list: true
             },
             {
-                label: 'Language Model',
+                label: 'Agent Name',
+                name: 'agentName',
+                type: 'string'
+            },
+            {
+                label: 'System Prompt',
+                name: 'systemPrompt',
+                type: 'string'
+            },
+            {
+                label: 'Chat Model',
                 name: 'model',
-                type: 'BaseLanguageModel'
-            },
-            {
-                label: 'Input Moderation',
-                description: 'Detect text that could generate harmful output and prevent it from being sent to the language model',
-                name: 'inputModeration',
-                type: 'Moderation',
-                optional: true,
-                list: true
-            },
-            {
-                label: 'Max Iterations',
-                name: 'maxIterations',
-                type: 'number',
-                optional: true,
-                additionalParams: true
+                type: 'ChatModel'
             }
         ]
     }
 
-    async init(): Promise<any> {
-        return null
-    }
-
-    async run(nodeData: INodeData, input: string, options: ICommonObject): Promise<string | object> {
-        const model = nodeData.inputs?.model as BaseLanguageModel
-        const maxIterations = nodeData.inputs?.maxIterations as string
-        let tools = nodeData.inputs?.tools as Tool[]
-        const moderations = nodeData.inputs?.inputModeration as Moderation[]
-
-        if (moderations && moderations.length > 0) {
-            try {
-                // Use the output of the moderation chain as input for the ReAct Agent for LLMs
-                input = await checkInputs(moderations, input)
-            } catch (e) {
-                await new Promise((resolve) => setTimeout(resolve, 500))
-                //streamResponse(options.socketIO && options.socketIOClientId, e.message, options.socketIO, options.socketIOClientId)
-                return formatResponse(e.message)
-            }
-        }
-
-        tools = flatten(tools)
-
-        const prompt = await pull<PromptTemplate>('hwchase17/react')
-
-        const agent = await createReactAgent({
-            llm: model,
-            tools,
-            prompt
-        })
-
-        const executor = new AgentExecutor({
-            agent,
-            tools,
-            verbose: process.env.DEBUG === 'true' ? true : false,
-            maxIterations: maxIterations ? parseFloat(maxIterations) : undefined
-        })
-
-        const callbacks = await additionalCallbacks(nodeData, options)
-
-        const result = await executor.invoke({ input }, { callbacks })
-
-        return result?.output
-    }
 }
 
 module.exports = { nodeClass: ReActAgentLLM_Agents }
