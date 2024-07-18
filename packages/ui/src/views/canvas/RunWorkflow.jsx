@@ -29,20 +29,6 @@ function a11yProps(index) {
 const blacklistCategoriesForAgentCanvas = ['Agents', 'Memory', 'Record Manager']
 const allowedAgentModel = {}
 
-const output = [
-    {
-        id: 'promptTemplate_0',
-        output: 'Hey what are you looking for?',
-    },
-    {
-        id: 'RouteLayer_0',
-        output: 'tester',
-    },
-    {
-        id: 'devDepartment_4',
-        output: 'I am a developer',
-    }
-]
 
 const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
     const theme = useTheme()
@@ -50,6 +36,7 @@ const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
     const dispatch = useDispatch()
     const reactFlow = useReactFlow()
     const outputStep = useRef(0)
+    const [runOutput, setRunOutput] = useState([])
 
     const [searchValue, setSearchValue] = useState('')
     const [nodes, setNodes] = useState({})
@@ -217,12 +204,22 @@ const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
         //         return { ...edge, animated: true }
         //     })
         // })
-
-        const id = setInterval(() => {
+        //
+        if (runOutput.length > 0) {
+            if (outputStep.current === runOutput.length) {
+                alert('done')
+                reactFlow.setNodes((nodes) => {
+                    return nodes.map((node) => {
+                        if (node.data.current) {
+                            return { ...node, data: { ...node.data, current: false } }
+                        } else return node
+                    })
+                })
+            }
             reactFlow.setNodes((nodes) => {
                 return nodes.map((node) => {
-                    if (output[outputStep.current].id === node.id) {
-                        return { ...node, data: { ...node.data, current: true, log: output[outputStep.current].output } }
+                    if (runOutput[outputStep.current].id === node.id) {
+                        return { ...node, data: { ...node.data, current: true, log: runOutput[outputStep.current].output } }
                     }
                     else if (node.data.current) {
                         return { ...node, data: { ...node.data, current: false } }
@@ -237,8 +234,60 @@ const RunWorkflow = ({ nodesData, node, isAgentCanvas }) => {
             //         if (edge.)
             //     })
             // })
-            outputStep.current = (outputStep.current + 1) % output.length
-        }, 2 * 1000)
+            outputStep.current += 1
+            return
+        }
+
+        const baseUrl = 'http://localhost:8000'
+        const json_workflow = JSON.stringify(reactFlow.toObject())
+
+        const nodes = reactFlow.getNodes()
+        let startMessage = ""
+        for (const node of nodes) {
+            if (node.data.type === 'StartNode') {
+                console.log(node.data.inputs)
+                startMessage = node.data.inputs["StartMessage"]
+                break
+            }
+        }
+        fetch(`${baseUrl}/runcode/langgraph`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ json_data: json_workflow, human_input: startMessage }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+
+                alert("READY")
+                // alert(JSON.stringify(data))
+                setRunOutput(data.output)
+                // const id = setInterval(() => {
+                //     console.log(JSON.stringify(runOutput))
+                //     console.log(outputStep.current)
+                //     reactFlow.setNodes((nodes) => {
+                //         return nodes.map((node) => {
+                //             if (runOutput[outputStep.current].id === node.id) {
+                //                 return { ...node, data: { ...node.data, current: true, log: runOutput[outputStep.current].output } }
+                //             }
+                //             else if (node.data.current) {
+                //                 return { ...node, data: { ...node.data, current: false } }
+                //             } else {
+                //                 return node
+                //             }
+                //         })
+                //     })
+                //     // reactFlow.setEdges((edges) => {
+                //     //     const targetNode = output[outputStep.current].id
+                //     //     return edges.map((edge) => {
+                //     //         if (edge.)
+                //     //     })
+                //     // })
+                //     outputStep.current = (outputStep.current + 1) % runOutput.length
+                // }, 2 * 1000)
+            })
+
     }
 
     const onDragStart = (event, node) => {

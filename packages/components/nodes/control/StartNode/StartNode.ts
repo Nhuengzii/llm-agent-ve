@@ -34,7 +34,14 @@ class StartNode implements INode {
     this.category = 'Control'
     this.description = ''
     this.baseClasses = [this.type]
-    this.inputs = []
+    this.inputs = [
+      {
+        name: "StartMessage",
+        label: "Start Message",
+        description: "Enter the message to start the flow",
+        type: "string",
+      }
+    ]
   }
 }
 
