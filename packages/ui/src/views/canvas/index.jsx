@@ -546,6 +546,7 @@ const Canvas = () => {
                             handleDeleteFlow={handleDeleteFlow}
                             handleLoadFlow={handleLoadFlow}
                             isAgentCanvas={isAgentCanvas}
+                            json_workflow={JSON.stringify({ nodes, edges }, null, 2)}
                         />
                     </Toolbar>
                 </AppBar>

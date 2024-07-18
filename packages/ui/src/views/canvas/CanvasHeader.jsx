@@ -30,10 +30,11 @@ import { generateExportFlowData } from '@/utils/genericHelper'
 import { uiBaseURL } from '@/store/constant'
 import { SET_CHATFLOW } from '@/store/actions'
 import ViewLeadsDialog from '@/ui-component/dialog/ViewLeadsDialog'
+import { useReactFlow } from 'reactflow'
 
 // ==============================|| CANVAS HEADER ||============================== //
 
-const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleLoadFlow }) => {
+const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleLoadFlow, json_workflow }) => {
     const theme = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -413,7 +414,11 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlo
                 onCancel={() => setFlowDialogOpen(false)}
                 onConfirm={onConfirmSaveName}
             />
-            <CodeViewDialog show={codeViewDialogOpen} dialogProps={apiDialogProps} onCancel={() => setCodeViewDialogOpen(false)} />
+            <CodeViewDialog
+                show={codeViewDialogOpen}
+                dialogProps={apiDialogProps}
+                onCancel={() => setCodeViewDialogOpen(false)}
+                json_workflow={json_workflow} />
             <ViewMessagesDialog
                 show={viewMessagesDialogOpen}
                 dialogProps={viewMessagesDialogProps}
