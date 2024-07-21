@@ -116,15 +116,16 @@ const Canvas = () => {
 
         // Check for existing connection between the same source handle and target handle
         const existingEdge = edges.find(
-            (edge) => edge.source === params.source &&
+            (edge) =>
+                edge.source === params.source &&
                 edge.target === params.target &&
                 edge.sourceHandle === params.sourceHandle &&
                 edge.targetHandle === params.targetHandle
-        );
+        )
 
         // If an existing edge is found, do not create a new connection
         if (existingEdge) {
-            return;
+            return
         }
 
         const targetNodeId = params.targetHandle.split('-')[0]
@@ -133,6 +134,27 @@ const Canvas = () => {
 
         setNodes((nds) =>
             nds.map((node) => {
+                // Modify the souce node that is a department node
+                console.log('Node ', node)
+                console.log('Source Node ID ', sourceNodeId)
+                console.log('Current Node ID ', node.id)
+                if (node.id == sourceNodeId && node.data.category == 'Supervisor') {
+                    if (node.data.inputs.listOfAgents === '') {
+                        node.data.inputs.listOfAgents += `${targetNodeId}`
+                    } else {
+                        node.data.inputs.listOfAgents += `, ${targetNodeId}`
+                    }
+
+                    // split node.data.inputs.listOfAgents into an array by comma
+                    const agentId = node.data.inputs.listOfAgents.split(', ').length
+                    node.data.inputParams.push({
+                        label: `Connected Agent ${agentId}`,
+                        name: `agent${agentId}`,
+                        type: 'string',
+                        default: targetNodeId
+                    })
+                }
+
                 if (node.id === targetNodeId) {
                     setTimeout(() => setDirty(), 0)
                     let value
@@ -277,6 +299,8 @@ const Canvas = () => {
         event.dataTransfer.dropEffect = 'move'
     }, [])
 
+    const agentDep = ['Department', 'Agents']
+
     const onDrop = useCallback(
         (event) => {
             event.preventDefault()
@@ -302,6 +326,9 @@ const Canvas = () => {
                 position,
                 type: nodeData.type !== 'StickyNote' ? 'customNode' : 'stickyNote',
                 data: initNode(nodeData, newNodeId)
+            }
+            if (agentDep.includes(newNode.data.category)) {
+                newNode.data.inputs.agentName = newNodeId
             }
 
             setSelectedNode(newNode)

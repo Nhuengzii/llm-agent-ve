@@ -29,6 +29,11 @@ class DevDepartmentGraph implements INode {
                 type: 'BeforeNode'
             },
             {
+                label: 'Agent Name',
+                name: 'agentName',
+                type: 'string'
+            },
+            {
                 label: 'LLM Type',
                 name: 'llmType',
                 type: 'options',
@@ -69,13 +74,6 @@ class DevDepartmentGraph implements INode {
                 additionalParams: true,
                 description: 'Persona for the agent',
                 placeholder: 'Insert the persona for the agent'
-            },
-            {
-                label: 'Agent Name',
-                name: 'agentName',
-                type: 'string',
-                optional: true,
-                additionalParams: true
             }
         ]
     }

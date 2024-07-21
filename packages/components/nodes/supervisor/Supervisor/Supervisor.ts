@@ -1,28 +1,28 @@
-import { getBaseClasses } from '../../../src/utils'
-import { INode, INodeParams, INodeOutputsValue } from '../../../src/Interface'
-import { AgentExecutor } from '../../../src/agents'
+import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime'
+import { BedrockEmbeddings, BedrockEmbeddingsParams } from '@langchain/community/embeddings/bedrock'
+import { ICommonObject, INode, INodeData, INodeOptionsValue, INodeParams } from '../../../src/Interface'
+import { getBaseClasses, getCredentialData, getCredentialParam } from '../../../src/utils'
 
-class DevDepartmentGraph implements INode {
+class RouteLayer implements INode {
     label: string
     name: string
     version: number
-    description: string
     type: string
     icon: string
     category: string
+    description: string
     baseClasses: string[]
     inputs: INodeParams[]
-    outputs?: INodeOutputsValue[]
 
     constructor() {
-        this.label = 'DevDepartment'
-        this.name = 'devDepartment'
+        this.label = 'Supervisor'
+        this.name = 'supervisor'
+        this.type = 'supervisor'
+        this.icon = 'supervisor.svg'
         this.version = 1.0
-        this.type = 'DevDepartment'
-        this.category = 'Department'
-        this.icon = 'devDepartment.png'
-        this.description = `Agent that uses Function Calling to pick the tools and args to call`
-        this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
+        this.category = 'Supervisor'
+        this.description = ''
+        this.baseClasses = [this.type, ...getBaseClasses(BedrockEmbeddings)]
         this.inputs = [
             {
                 label: 'Input',
@@ -30,16 +30,9 @@ class DevDepartmentGraph implements INode {
                 type: 'BeforeNode'
             },
             {
-                label: 'Agent Name',
-                name: 'agentName',
-                type: 'string'
-            },
-            {
                 label: 'LLM Type',
                 name: 'llmType',
                 type: 'options',
-                additionalParams: true,
-                optional: true,
                 options: [
                     {
                         label: 'LLM API',
@@ -56,7 +49,9 @@ class DevDepartmentGraph implements INode {
                         name: 'llm_huggingface',
                         description: 'LLM Huggingface'
                     }
-                ]
+                ],
+                additionalParams: true,
+                optional: true
             },
             {
                 label: 'LLM Model',
@@ -65,9 +60,16 @@ class DevDepartmentGraph implements INode {
                 options: [],
                 description: 'LLM Model for the agent',
                 additionalParams: true
+            },
+            {
+                label: 'List of Agents',
+                name: 'listOfAgents',
+                type: 'string',
+                optional: true,
+                additionalParams: true
             }
         ]
     }
 }
 
-module.exports = { nodeClass: DevDepartmentGraph }
+module.exports = { nodeClass: RouteLayer }

@@ -29,6 +29,13 @@ class FinanceDepartmentGraph implements INode {
                 type: 'BeforeNode'
             },
             {
+                label: 'Agent Name',
+                name: 'agentName',
+                type: 'string',
+                optional: true,
+                additionalParams: true
+            },
+            {
                 label: 'LLM Type',
                 name: 'llmType',
                 type: 'options',
@@ -58,13 +65,6 @@ class FinanceDepartmentGraph implements INode {
                 type: 'options',
                 options: [],
                 description: 'LLM Model for the agent',
-                additionalParams: true
-            },
-            {
-                label: 'Agent Name',
-                name: 'agentName',
-                type: 'string',
-                optional: true,
                 additionalParams: true
             }
         ]
