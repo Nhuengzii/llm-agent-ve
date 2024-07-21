@@ -104,3 +104,7 @@
 ## S/MIME message
 *.smime
 *.vsix
+
+*.ipynb
+*.py
+run.sh
