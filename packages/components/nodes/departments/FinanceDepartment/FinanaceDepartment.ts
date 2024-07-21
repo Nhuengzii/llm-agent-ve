@@ -14,7 +14,7 @@ class FinanceDepartmentGraph implements INode {
     inputs: INodeParams[]
 
     constructor() {
-        this.label = 'FinanceDepartment'
+        this.label = 'Finance Department'
         this.name = 'financeDepartment'
         this.version = 1.0
         this.type = 'FinanceDepartment'

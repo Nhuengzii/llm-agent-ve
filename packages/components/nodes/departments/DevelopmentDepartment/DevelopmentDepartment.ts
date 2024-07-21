@@ -15,10 +15,10 @@ class DevDepartmentGraph implements INode {
     outputs?: INodeOutputsValue[]
 
     constructor() {
-        this.label = 'DevDepartment'
-        this.name = 'devDepartment'
+        this.label = 'Development Department'
+        this.name = 'developmentDepartment'
         this.version = 1.0
-        this.type = 'DevDepartment'
+        this.type = 'DevelopmentDepartment'
         this.category = 'Department'
         this.icon = 'devDepartment.png'
         this.description = `Agent that uses Function Calling to pick the tools and args to call`
