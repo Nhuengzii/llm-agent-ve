@@ -1,25 +1,26 @@
 import PropTypes from 'prop-types'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 // material-ui
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { IconButton, Box, Typography, Divider, Button } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 
 // project imports
 import NodeCardWrapper from '@/ui-component/cards/NodeCardWrapper'
+import AdditionalParamsDialog from '@/ui-component/dialog/AdditionalParamsDialog'
+import NodeInfoDialog from '@/ui-component/dialog/NodeInfoDialog'
 import NodeTooltip from '@/ui-component/tooltip/NodeTooltip'
 import NodeInputHandler from './NodeInputHandler'
 import NodeOutputHandler from './NodeOutputHandler'
-import AdditionalParamsDialog from '@/ui-component/dialog/AdditionalParamsDialog'
-import NodeInfoDialog from '@/ui-component/dialog/NodeInfoDialog'
 
 // const
-import { baseURL } from '@/store/constant'
-import { IconTrash, IconCopy, IconInfoCircle, IconAlertTriangle } from '@tabler/icons-react'
-import { flowContext } from '@/store/context/ReactFlowContext'
 import LlamaindexPNG from '@/assets/images/llamaindex.png'
+import { baseURL } from '@/store/constant'
+import { flowContext } from '@/store/context/ReactFlowContext'
+import { IconAlertTriangle, IconCopy, IconInfoCircle, IconTrash } from '@tabler/icons-react'
+import NodeSpecialOutputHandler from './NodeSpecialOutputHandler'
 
 // ===========================|| CANVAS NODE ||=========================== //
 
@@ -68,7 +69,7 @@ const CanvasNode = ({ data }) => {
             } else if (componentNode.badge === 'DEPRECATING') {
                 setWarningMessage(
                     componentNode?.deprecateMessage ??
-                    'This node will be deprecated in the next release. Change to a new node tagged with NEW'
+                        'This node will be deprecated in the next release. Change to a new node tagged with NEW'
                 )
             } else {
                 setWarningMessage('')
@@ -83,15 +84,15 @@ const CanvasNode = ({ data }) => {
                 sx={{
                     padding: 0,
                     borderColor: data.selected ? theme.palette.primary.main : theme.palette.text.secondary,
-                    "@keyframes blinker": {
-                        "0%": {
-                            'borderColor': 'transparent',
+                    '@keyframes blinker': {
+                        '0%': {
+                            borderColor: 'transparent'
                         },
-                        "50%": {
-                            'borderColor': 'red'
+                        '50%': {
+                            borderColor: 'red'
                         },
-                        "100%": {
-                            'borderColor': 'transparent',
+                        '100%': {
+                            borderColor: 'transparent'
                         }
                     },
                     animation: data.current ? 'blinker 1s linear infinite' : 'none'
@@ -233,7 +234,7 @@ const CanvasNode = ({ data }) => {
                                     textAlign: 'center',
                                     marginTop:
                                         data.inputParams.filter((param) => param.additionalParams).length ===
-                                            data.inputParams.length + data.inputAnchors.length
+                                        data.inputParams.length + data.inputAnchors.length
                                             ? 20
                                             : 0
                                 }}
@@ -254,12 +255,10 @@ const CanvasNode = ({ data }) => {
                                 Output
                             </Typography>
                         </Box>
-                        {(data.log != null || data.log != '') &&
-                            <Box sx={{ background: theme.palette.asyncSelect.main, p: 1 }}>
-                                <p>{data.log}</p>
-                            </Box>
-                        }
                         <Divider />
+                        {data.output?.map((output) => (
+                            <NodeSpecialOutputHandler key={JSON.stringify(data)} output={output} data={data} />
+                        ))}
                         {data.outputAnchors.map((outputAnchor) => (
                             <NodeOutputHandler key={JSON.stringify(data)} outputAnchor={outputAnchor} data={data} />
                         ))}

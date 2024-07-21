@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Handle, Position, useUpdateNodeInternals } from 'reactflow'
-import { useEffect, useRef, useState, useContext } from 'react'
 
 // material-ui
-import { useTheme, styled } from '@mui/material/styles'
-import { Box, Typography, Tooltip } from '@mui/material'
-import { tooltipClasses } from '@mui/material/Tooltip'
 import { flowContext } from '@/store/context/ReactFlowContext'
-import { isValidConnection } from '@/utils/genericHelper'
 import { Dropdown } from '@/ui-component/dropdown/Dropdown'
+import { isValidConnection } from '@/utils/genericHelper'
+import { Box, Tooltip, Typography } from '@mui/material'
+import { styled, useTheme } from '@mui/material/styles'
+import { tooltipClasses } from '@mui/material/Tooltip'
 
 const CustomWidthTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)({
     [`& .${tooltipClasses.tooltip}`]: {
