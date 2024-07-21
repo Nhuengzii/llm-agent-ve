@@ -271,7 +271,18 @@ const CanvasNode = ({ data }) => {
 
                                         return (
                                             <>
-                                                <p>{JSON.stringify(dataNode.data.chatHistory, null, 2)}</p>
+                                                <div>
+                                                    {dataNode.data.chatHistory.map((chat, key) => {
+                                                        return (
+                                                            <li key={key}>
+                                                                <p>
+                                                                    <span style={{ fontWeight: 'bold' }}>{chat.sender}</span>:{' '}
+                                                                    {chat.message}
+                                                                </p>
+                                                            </li>
+                                                        )
+                                                    })}
+                                                </div>
                                             </>
                                         )
                                     })()}
