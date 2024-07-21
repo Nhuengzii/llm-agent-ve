@@ -256,7 +256,7 @@ const CanvasNode = ({ data }) => {
                             </Typography>
                         </Box>
                         <Divider />
-                        {data.output.map((output) => (
+                        {data.output?.map((output) => (
                             <NodeSpecialOutputHandler key={JSON.stringify(data)} output={output} data={data} />
                         ))}
                         {data.outputAnchors.map((outputAnchor) => (
