@@ -28,8 +28,8 @@ import { TooltipWithParser } from '@/ui-component/tooltip/TooltipWithParser'
 import { isValidConnection } from '@/utils/genericHelper'
 import AssistantDialog from '@/views/assistants/AssistantDialog'
 import ToolDialog from '@/views/tools/ToolDialog'
-import CredentialInputHandler from './CredentialInputHandler'
 import { useReactFlow } from 'reactflow'
+import CredentialInputHandler from './CredentialInputHandler'
 // utils
 import { getInputVariables } from '@/utils/genericHelper'
 
@@ -422,7 +422,58 @@ const NodeInputHandler = ({ inputAnchor, inputParam, data, disabled = false, isA
                                 <Button
                                     variant='contained'
                                     color='primary'
-                                    onClick={() => handleSubmit(data.inputs[inputParam.name])}
+                                    onClick={() => {
+                                        reactFlowInstance.setNodes((nodes) => {
+                                            return nodes.map((node) => {
+                                                if (node.id === data.id) {
+                                                    return {
+                                                        ...node,
+                                                        data: {
+                                                            ...node.data,
+                                                            inputs: {
+                                                                ...node.data.inputs,
+                                                                message: ''
+                                                            },
+                                                            chatHistory: [
+                                                                ...node.data.chatHistory,
+                                                                { sender: 'user', message: data.inputs['message'] }
+                                                            ]
+                                                        }
+                                                    }
+                                                } else {
+                                                    return node
+                                                }
+                                            })
+                                        })
+                                        const ws = new WebSocket('ws://localhost:8000/runcode/session')
+                                        ws.onopen = () => {
+                                            alert('connected')
+                                        }
+                                        ws.onmessage = (event) => {
+                                            const d = JSON.parse(event.data)
+                                            reactFlowInstance.setNodes((nodes) => {
+                                                return nodes.map((node) => {
+                                                    if (node.id === data.id) {
+                                                        return {
+                                                            ...node,
+                                                            data: {
+                                                                ...node.data,
+                                                                chatHistory: [
+                                                                    ...node.data.chatHistory,
+                                                                    { sender: d.sender, message: d.message }
+                                                                ]
+                                                            }
+                                                        }
+                                                    } else {
+                                                        return node
+                                                    }
+                                                })
+                                            })
+                                        }
+                                        ws.close = () => {
+                                            alert('disconnected')
+                                        }
+                                    }}
                                     style={{ marginTop: '10px' }}
                                 >
                                     Submit

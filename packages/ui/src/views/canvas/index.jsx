@@ -1,51 +1,51 @@
-import { useEffect, useRef, useState, useCallback, useContext } from 'react'
-import ReactFlow, { addEdge, Controls, Background, useNodesState, useEdgesState } from 'reactflow'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import ReactFlow, { addEdge, Background, Controls, useEdgesState, useNodesState } from 'reactflow'
 import 'reactflow/dist/style.css'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
 import {
-    REMOVE_DIRTY,
-    SET_DIRTY,
-    SET_CHATFLOW,
+    closeSnackbar as closeSnackbarAction,
     enqueueSnackbar as enqueueSnackbarAction,
-    closeSnackbar as closeSnackbarAction
+    REMOVE_DIRTY,
+    SET_CHATFLOW,
+    SET_DIRTY
 } from '@/store/actions'
-import { omit, cloneDeep } from 'lodash'
+import { cloneDeep, omit } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Toolbar, Box, AppBar, Button, Fab } from '@mui/material'
+import { AppBar, Box, Button, Fab, Toolbar } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
-import CanvasNode from './CanvasNode'
-import ButtonEdge from './ButtonEdge'
-import StickyNote from './StickyNote'
-import CanvasHeader from './CanvasHeader'
-import AddNodes from './AddNodes'
-import RunWorkflow from './RunWorkflow'
+import { flowContext } from '@/store/context/ReactFlowContext'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { ChatPopUp } from '@/views/chatmessage/ChatPopUp'
 import { VectorStorePopUp } from '@/views/vectorstore/VectorStorePopUp'
-import { flowContext } from '@/store/context/ReactFlowContext'
+import AddNodes from './AddNodes'
+import ButtonEdge from './ButtonEdge'
+import CanvasHeader from './CanvasHeader'
+import CanvasNode from './CanvasNode'
+import RunWorkflow from './RunWorkflow'
+import StickyNote from './StickyNote'
 
 // API
-import nodesApi from '@/api/nodes'
 import chatflowsApi from '@/api/chatflows'
+import nodesApi from '@/api/nodes'
 
 // Hooks
 import useApi from '@/hooks/useApi'
 import useConfirm from '@/hooks/useConfirm'
 
 // icons
-import { IconX, IconRefreshAlert } from '@tabler/icons-react'
+import { IconRefreshAlert, IconX } from '@tabler/icons-react'
 
 // utils
 import {
     getUniqueNodeId,
+    getUpsertDetails,
     initNode,
     rearrangeToolsOrdering,
-    getUpsertDetails,
     updateOutdatedNodeData,
     updateOutdatedNodeEdge
 } from '@/utils/genericHelper'
@@ -116,15 +116,16 @@ const Canvas = () => {
 
         // Check for existing connection between the same source handle and target handle
         const existingEdge = edges.find(
-            (edge) => edge.source === params.source &&
+            (edge) =>
+                edge.source === params.source &&
                 edge.target === params.target &&
                 edge.sourceHandle === params.sourceHandle &&
                 edge.targetHandle === params.targetHandle
-        );
+        )
 
         // If an existing edge is found, do not create a new connection
         if (existingEdge) {
-            return;
+            return
         }
 
         const targetNodeId = params.targetHandle.split('-')[0]
