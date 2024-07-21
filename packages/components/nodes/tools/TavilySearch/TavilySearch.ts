@@ -2,7 +2,7 @@ import { SearchApi } from '@langchain/community/tools/searchapi'
 import { ICommonObject, INode, INodeData, INodeParams } from '../../../src/Interface'
 import { getBaseClasses, getCredentialData, getCredentialParam } from '../../../src/utils'
 
-class TavilySearch implements INode {
+class TavilySearch_Tools implements INode {
     label: string
     name: string
     version: number
@@ -19,7 +19,7 @@ class TavilySearch implements INode {
         this.name = 'tavilySearch'
         this.version = 1.0
         this.type = 'tools'
-        this.icon = 'tavilySearch.jpeg'
+        this.icon = 'tavilySearch.svg'
         this.category = 'Tools'
         this.description = "Tavily's Search API is a search engine built specifically for AI agents"
         this.inputs = []
@@ -27,4 +27,4 @@ class TavilySearch implements INode {
     }
 }
 
-module.exports = { nodeClass: TavilySearch }
+module.exports = { nodeClass: TavilySearch_Tools }
