@@ -1,34 +1,34 @@
 import PropTypes from 'prop-types'
-import { Handle, Position, useUpdateNodeInternals } from 'reactflow'
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Handle, Position, useUpdateNodeInternals } from 'reactflow'
 
 // material-ui
-import { useTheme, styled } from '@mui/material/styles'
-import { Box, Typography, Tooltip, IconButton, Button } from '@mui/material'
 import IconAutoFixHigh from '@mui/icons-material/AutoFixHigh'
+import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import { styled, useTheme } from '@mui/material/styles'
 import { tooltipClasses } from '@mui/material/Tooltip'
-import { IconArrowsMaximize, IconEdit, IconAlertTriangle } from '@tabler/icons-react'
+import { IconAlertTriangle, IconArrowsMaximize, IconEdit } from '@tabler/icons-react'
 
 // project import
+import { flowContext } from '@/store/context/ReactFlowContext'
+import ExpandTextDialog from '@/ui-component/dialog/ExpandTextDialog'
+import FormatPromptValuesDialog from '@/ui-component/dialog/FormatPromptValuesDialog'
+import ManageScrapedLinksDialog from '@/ui-component/dialog/ManageScrapedLinksDialog'
+import PromptLangsmithHubDialog from '@/ui-component/dialog/PromptLangsmithHubDialog'
+import { AsyncDropdown } from '@/ui-component/dropdown/AsyncDropdown'
 import { Dropdown } from '@/ui-component/dropdown/Dropdown'
 import { MultiDropdown } from '@/ui-component/dropdown/MultiDropdown'
-import { AsyncDropdown } from '@/ui-component/dropdown/AsyncDropdown'
-import { Input } from '@/ui-component/input/Input'
-import { DataGrid } from '@/ui-component/grid/DataGrid'
-import { File } from '@/ui-component/file/File'
-import { SwitchInput } from '@/ui-component/switch/Switch'
-import { flowContext } from '@/store/context/ReactFlowContext'
-import { isValidConnection } from '@/utils/genericHelper'
-import { JsonEditorInput } from '@/ui-component/json/JsonEditor'
-import { TooltipWithParser } from '@/ui-component/tooltip/TooltipWithParser'
 import { CodeEditor } from '@/ui-component/editor/CodeEditor'
-import ToolDialog from '@/views/tools/ToolDialog'
+import { File } from '@/ui-component/file/File'
+import { DataGrid } from '@/ui-component/grid/DataGrid'
+import { Input } from '@/ui-component/input/Input'
+import { JsonEditorInput } from '@/ui-component/json/JsonEditor'
+import { SwitchInput } from '@/ui-component/switch/Switch'
+import { TooltipWithParser } from '@/ui-component/tooltip/TooltipWithParser'
+import { isValidConnection } from '@/utils/genericHelper'
 import AssistantDialog from '@/views/assistants/AssistantDialog'
-import FormatPromptValuesDialog from '@/ui-component/dialog/FormatPromptValuesDialog'
-import ExpandTextDialog from '@/ui-component/dialog/ExpandTextDialog'
-import PromptLangsmithHubDialog from '@/ui-component/dialog/PromptLangsmithHubDialog'
-import ManageScrapedLinksDialog from '@/ui-component/dialog/ManageScrapedLinksDialog'
+import ToolDialog from '@/views/tools/ToolDialog'
 import CredentialInputHandler from './CredentialInputHandler'
 
 // utils
@@ -377,18 +377,41 @@ const NodeInputHandler = ({ inputAnchor, inputParam, data, disabled = false, isA
                                 </div>
                             </>
                         )}
-                        {(inputParam.type === 'string' || inputParam.type === 'password' || inputParam.type === 'number') && (
-                            <Input
-                                key={data.inputs[inputParam.name]}
-                                disabled={disabled}
-                                inputParam={inputParam}
-                                onChange={(newValue) => (data.inputs[inputParam.name] = newValue)}
-                                value={data.inputs[inputParam.name] ?? inputParam.default ?? ''}
-                                nodes={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getNodes() : []}
-                                edges={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getEdges() : []}
-                                nodeId={data.id}
-                            />
+                        {inputParam.type === 'string' && data.category == 'Inputs' && (
+                            <>
+                                <Input
+                                    key={data.inputs[inputParam.name]}
+                                    disabled={disabled}
+                                    inputParam={inputParam}
+                                    onChange={(newValue) => (data.inputs[inputParam.name] = newValue)}
+                                    value={data.inputs[inputParam.name] ?? inputParam.default ?? ''}
+                                    nodes={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getNodes() : []}
+                                    edges={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getEdges() : []}
+                                    nodeId={data.id}
+                                />
+                                <Button
+                                    variant='contained'
+                                    color='primary'
+                                    onClick={() => handleSubmit(data.inputs[inputParam.name])}
+                                    style={{ marginTop: '10px' }}
+                                >
+                                    Submit
+                                </Button>
+                            </>
                         )}
+                        {data.category != 'Inputs' &&
+                            (inputParam.type === 'string' || inputParam.type === 'password' || inputParam.type === 'number') && (
+                                <Input
+                                    key={data.inputs[inputParam.name]}
+                                    disabled={disabled}
+                                    inputParam={inputParam}
+                                    onChange={(newValue) => (data.inputs[inputParam.name] = newValue)}
+                                    value={data.inputs[inputParam.name] ?? inputParam.default ?? ''}
+                                    nodes={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getNodes() : []}
+                                    edges={inputParam?.acceptVariable && reactFlowInstance ? reactFlowInstance.getEdges() : []}
+                                    nodeId={data.id}
+                                />
+                            )}
                         {inputParam.type === 'json' && (
                             <>
                                 {!inputParam?.acceptVariable && (
