@@ -32,6 +32,8 @@ class DevDepartmentGraph implements INode {
                 label: 'LLM Type',
                 name: 'llmType',
                 type: 'options',
+                additionalParams: true,
+                optional: true,
                 options: [
                     {
                         label: 'LLM API',

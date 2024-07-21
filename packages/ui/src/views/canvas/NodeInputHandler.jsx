@@ -2,7 +2,6 @@ import PropTypes from 'prop-types'
 import { Handle, Position, useUpdateNodeInternals } from 'reactflow'
 import { useEffect, useRef, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
-
 // material-ui
 import { useTheme, styled } from '@mui/material/styles'
 import { Box, Typography, Tooltip, IconButton, Button } from '@mui/material'
@@ -30,12 +29,14 @@ import ExpandTextDialog from '@/ui-component/dialog/ExpandTextDialog'
 import PromptLangsmithHubDialog from '@/ui-component/dialog/PromptLangsmithHubDialog'
 import ManageScrapedLinksDialog from '@/ui-component/dialog/ManageScrapedLinksDialog'
 import CredentialInputHandler from './CredentialInputHandler'
-
+import { useReactFlow } from 'reactflow'
 // utils
 import { getInputVariables } from '@/utils/genericHelper'
 
 // const
 import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
+
+import * as modelData from './llm_name.json'
 
 const EDITABLE_OPTIONS = ['selectedTool', 'selectedAssistant']
 
@@ -64,6 +65,8 @@ const NodeInputHandler = ({ inputAnchor, inputParam, data, disabled = false, isA
     const [showPromptHubDialog, setShowPromptHubDialog] = useState(false)
     const [showManageScrapedLinksDialog, setShowManageScrapedLinksDialog] = useState(false)
     const [manageScrapedLinksDialogProps, setManageScrapedLinksDialogProps] = useState({})
+
+    const { setNodes } = useReactFlow()
 
     const onExpandDialogClicked = (value, inputParam) => {
         const dialogProps = {
@@ -196,6 +199,33 @@ const NodeInputHandler = ({ inputAnchor, inputParam, data, disabled = false, isA
         }
         setAsyncOptionEditDialogProps({})
         setAsyncOptionEditDialog('')
+    }
+
+    const optionOnSelectHandler = (newValue) => {
+        data.inputs[inputParam.name] = newValue
+        if (inputParam.name == 'llmType') {
+            for (let i = 0; i < data.inputParams.length; i++) {
+                if (data.inputParams[i].name == 'llmModel') {
+                    data.inputParams[i].options = modelData[newValue]
+                }
+            }
+
+            setNodes((nodes) => {
+                nodes.map((node) => {
+                    if (node.id == data.id) {
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                inputParams: data.inputParam
+                            }
+                        }
+                    }
+
+                    return node
+                })
+            })
+        }
     }
 
     useEffect(() => {
@@ -434,7 +464,7 @@ const NodeInputHandler = ({ inputAnchor, inputParam, data, disabled = false, isA
                                 disabled={disabled}
                                 name={inputParam.name}
                                 options={inputParam.options}
-                                onSelect={(newValue) => (data.inputs[inputParam.name] = newValue)}
+                                onSelect={optionOnSelectHandler}
                                 value={data.inputs[inputParam.name] ?? inputParam.default ?? 'choose an option'}
                             />
                         )}

@@ -48,7 +48,9 @@ class DevDepartmentGraph implements INode {
                         name: 'llm_huggingface',
                         description: 'LLM Huggingface'
                     }
-                ]
+                ],
+                additionalParams: true,
+                optional: true
             },
             {
                 label: 'LLM Model',
