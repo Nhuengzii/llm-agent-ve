@@ -26,37 +26,41 @@ class DevDepartmentGraph implements INode {
             {
                 label: 'Input',
                 name: 'input',
-                type: 'BeforeNode',
+                type: 'BeforeNode'
+            },
+            {
+                label: 'LLM Type',
+                name: 'llmType',
+                type: 'options',
+                options: [
+                    {
+                        label: 'LLM API',
+                        name: 'llm_api',
+                        description: 'LLM API'
+                    },
+                    {
+                        label: 'LLM Local',
+                        name: 'llm_local',
+                        description: 'LLM Local'
+                    },
+                    {
+                        label: 'LLM Huggingface',
+                        name: 'llm_huggingface',
+                        description: 'LLM Huggingface'
+                    }
+                ]
             },
             {
                 label: 'LLM Model',
                 name: 'llmModel',
-                type: 'LLM Model',
+                type: 'options',
+                options: [],
                 description: 'LLM Model for the agent',
-                optional: true
-            },
-            {
-                label: 'Embedding Model',
-                name: 'embeddingModel',
-                type: 'Embedding Model',
-                optional: true
+                additionalParams: true
             },
             {
                 label: 'Agent Name',
                 name: 'agentName',
-                type: 'string',
-                optional: true
-            },
-            {
-                label: 'Input Key',
-                name: 'inputKey',
-                type: 'string',
-                optional: true,
-                additionalParams: true
-            },
-            {
-                label: 'Ouput Key',
-                name: 'outputKey',
                 type: 'string',
                 optional: true,
                 additionalParams: true

@@ -24,38 +24,55 @@ class DevDepartmentGraph implements INode {
         this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
         this.inputs = [
             {
-                label: 'Agent Name',
-                name: 'agentName',
-                type: 'string',
-                description: 'The name of the agent to call'
+                label: 'Input',
+                name: 'input',
+                type: 'BeforeNode'
+            },
+            {
+                label: 'LLM Type',
+                name: 'llmType',
+                type: 'options',
+                options: [
+                    {
+                        label: 'LLM API',
+                        name: 'llm_api',
+                        description: 'LLM API'
+                    },
+                    {
+                        label: 'LLM Local',
+                        name: 'llm_local',
+                        description: 'LLM Local'
+                    },
+                    {
+                        label: 'LLM Huggingface',
+                        name: 'llm_huggingface',
+                        description: 'LLM Huggingface'
+                    }
+                ]
             },
             {
                 label: 'LLM Model',
                 name: 'llmModel',
-                type: 'LLM Model',
+                type: 'options',
+                options: [],
                 description: 'LLM Model for the agent',
-                optional: true
-            },
-            {
-                label: 'Embedding Model',
-                name: 'embeddingModel',
-                type: 'Embedding Model',
-                optional: true
-            },
-            {
-                label: 'Tools',
-                name: 'tools',
-                type: 'Tools',
-                description: 'Tools for the agent'
+                additionalParams: true
             },
             {
                 label: 'Persona',
                 name: 'persona',
-                type: 'string',
-                rows: 5,
-                description: 'Persona',
+                type: 'strng',
+                rows: 4,
                 optional: true,
-                placeholder: 'Enter persona',
+                additionalParams: true,
+                description: 'Persona for the agent',
+                placeholder: 'Insert the persona for the agent'
+            },
+            {
+                label: 'Agent Name',
+                name: 'agentName',
+                type: 'string',
+                optional: true,
                 additionalParams: true
             }
         ]

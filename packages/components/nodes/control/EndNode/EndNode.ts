@@ -30,7 +30,7 @@ class EndNode implements INode {
     this.name = 'EndNode'
     this.version = 5.0
     this.type = 'EndNode'
-    this.icon = 'route.svg'
+    this.icon = 'endNode.jpg'
     this.category = 'Control'
     this.description = ''
     this.baseClasses = [this.type]
