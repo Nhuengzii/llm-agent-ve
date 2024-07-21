@@ -22,7 +22,7 @@ class ChatWithAgent implements INode {
         this.category = 'Inputs'
         this.description = 'Use this node to chat with any agents '
         this.baseClasses = [this.type]
-        this.chatHistory = ['Hi there', "Here's how I can help you"]
+        this.chatHistory = []
         this.inputs = [
             {
                 name: 'message',

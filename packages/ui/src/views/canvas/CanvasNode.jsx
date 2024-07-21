@@ -20,6 +20,7 @@ import LlamaindexPNG from '@/assets/images/llamaindex.png'
 import { baseURL } from '@/store/constant'
 import { flowContext } from '@/store/context/ReactFlowContext'
 import { IconAlertTriangle, IconCopy, IconInfoCircle, IconTrash } from '@tabler/icons-react'
+import { useReactFlow } from 'reactflow'
 import NodeSpecialOutputHandler from './NodeSpecialOutputHandler'
 
 // ===========================|| CANVAS NODE ||=========================== //
@@ -28,6 +29,7 @@ const CanvasNode = ({ data }) => {
     const theme = useTheme()
     const canvas = useSelector((state) => state.canvas)
     const { deleteNode, duplicateNode } = useContext(flowContext)
+    const reactFlow = useReactFlow()
 
     const [showDialog, setShowDialog] = useState(false)
     const [dialogProps, setDialogProps] = useState({})
@@ -255,6 +257,38 @@ const CanvasNode = ({ data }) => {
                                 Output
                             </Typography>
                         </Box>
+                        <Divider />
+                        {data.type === 'ShowText' && (
+                            <Box sx={{ background: theme.palette.asyncSelect.main, p: 1 }}>
+                                <p>
+                                    {(() => {
+                                        const edges = reactFlow.getEdges()
+                                        let targetEdges = edges.filter((edge) => edge.target === data.id)
+                                        if (targetEdges.length === 0) {
+                                            return <></>
+                                        }
+                                        const dataNode = reactFlow.getNode(targetEdges[0].source)
+
+                                        return (
+                                            <>
+                                                <div>
+                                                    {dataNode.data.chatHistory.map((chat, key) => {
+                                                        return (
+                                                            <li key={key}>
+                                                                <p>
+                                                                    <span style={{ fontWeight: 'bold' }}>{chat.sender}</span>:{' '}
+                                                                    {chat.message}
+                                                                </p>
+                                                            </li>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </>
+                                        )
+                                    })()}
+                                </p>
+                            </Box>
+                        )}
                         <Divider />
                         {data.output?.map((output) => (
                             <NodeSpecialOutputHandler key={JSON.stringify(data)} output={output} data={data} />
